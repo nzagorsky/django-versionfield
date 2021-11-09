@@ -1,17 +1,14 @@
 from __future__ import unicode_literals
 
 import six
-
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 from . import forms
 from .constants import DEFAULT_NUMBER_BITS
-from .version import Version
 from .utils import convert_version_int_to_string
+from .version import Version
 
 
-@python_2_unicode_compatible
 class VersionField(models.Field):
 
     """
@@ -40,8 +37,7 @@ class VersionField(models.Field):
             return Version(value, self.number_bits)
 
         return Version(
-            convert_version_int_to_string(value, self.number_bits),
-            self.number_bits
+            convert_version_int_to_string(value, self.number_bits), self.number_bits
         )
 
     def from_db_value(self, value, expression, connection, context):
@@ -49,8 +45,8 @@ class VersionField(models.Field):
         if value is None:
             return value
         return Version(
-            convert_version_int_to_string(value, self.number_bits),
-            self.number_bits)
+            convert_version_int_to_string(value, self.number_bits), self.number_bits
+        )
 
     def get_prep_value(self, value):
         if isinstance(value, six.string_types):
@@ -62,10 +58,7 @@ class VersionField(models.Field):
         return int(value)
 
     def formfield(self, **kwargs):
-        defaults = {
-            'form_class': forms.VersionField,
-            'number_bits': self.number_bits
-        }
+        defaults = {"form_class": forms.VersionField, "number_bits": self.number_bits}
         defaults.update(kwargs)
         return super(VersionField, self).formfield(**defaults)
 
@@ -75,13 +68,16 @@ class VersionField(models.Field):
 
 try:
     from south.modelsinspector import add_introspection_rules
-    rules = [(
-        (VersionField,),
-        [],
-        {
-            "number_bits": ["number_bits", {"default": DEFAULT_NUMBER_BITS}],
-        },
-    )]
+
+    rules = [
+        (
+            (VersionField,),
+            [],
+            {
+                "number_bits": ["number_bits", {"default": DEFAULT_NUMBER_BITS}],
+            },
+        )
+    ]
     add_introspection_rules(rules, ["^versionfield"])
 except ImportError:
     # looks like we aren't using south

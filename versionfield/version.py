@@ -1,11 +1,9 @@
 import six
 
-from django.utils.encoding import python_2_unicode_compatible
+from .utils import convert_version_string_to_int
+from .utils import convert_version_int_to_string
 
-from .utils import convert_version_string_to_int, convert_version_int_to_string
 
-
-@python_2_unicode_compatible
 class Version(object):
     def __init__(self, string, number_bits):
         """
@@ -13,12 +11,12 @@ class Version(object):
         Store it as a converted int
         """
         self.number_bits = number_bits
-        self.internal_integer = convert_version_string_to_int(
-            string, number_bits)
+        self.internal_integer = convert_version_string_to_int(string, number_bits)
 
     def __str__(self):
-        return six.text_type(convert_version_int_to_string(
-                             self.internal_integer, self.number_bits))
+        return six.text_type(
+            convert_version_int_to_string(self.internal_integer, self.number_bits)
+        )
 
     def __repr__(self):
         return self.__str__()
