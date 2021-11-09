@@ -40,7 +40,7 @@ class VersionField(models.Field):
             convert_version_int_to_string(value, self.number_bits), self.number_bits
         )
 
-    def from_db_value(self, value, expression, connection, context):
+    def from_db_value(self, value, expression, connection, context=None):
         """Convert data from database."""
         if value is None:
             return value
